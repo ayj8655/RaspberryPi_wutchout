@@ -1,6 +1,6 @@
 # RaspberryPi_wutchout
 
-순서도
+- 순서도
 
 
 
@@ -9,31 +9,39 @@ https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.ka
 )
 
 
-GPS 모듈 사용하기
+- GPS 모듈 사용하기
 
 GPIO 포트를 사용하는 방법과 USB포트를 사용하는 방법중 USB포트를 사용하는 방법으로 진행하였습니다. 
 
-
+---
 1. 라즈베리파이 업데이트 및 재부팅
 
 ```
-    sudo apt-get update
-    sudo apt-get upgrade
-    sudo reboot
+sudo apt-get update
+sudo apt-get upgrade
+sudo reboot
 ```
+---
 2. GPS 사용을 위한 설정
 ```
-    sudo raspi-config
+sudo raspi-config
 ```
 
 
 Interfacing options -> Serial -> No -> Yes 이후 재부팅
 
+![순서도](https://i0.wp.com/ozzmaker.com/wp-content/uploads/2016/12/serial-configNew2.png?resize=300%2C172
+)
+![순서도](https://i2.wp.com/ozzmaker.com/wp-content/uploads/2016/12/serial-configNew3.png?resize=300%2C172
+)![순서도](https://i1.wp.com/ozzmaker.com/wp-content/uploads/2016/12/serial-configNew4.png?resize=300%2C172
+)![순서도](https://i1.wp.com/ozzmaker.com/wp-content/uploads/2016/12/serial-configNew5.png?resize=300%2C172
+)
+---
 3. GPS 데이터 표시 툴(gpsd) 설치
 ```
 sudo apt-get install gpsd-clients gpsd -y
 ```
-
+---
 4. 초기 설정 변경
 ```
 sudo nano /etc/default/gpsd
@@ -61,7 +69,9 @@ console=ttyAMA0,115200 kgdboc=ttyAMA0,115200
 ```
 stty -F /dev/ttyUSB0 9600
 ```
-GPS 데이터 보기 
+---
+
+- GPS 데이터 보기 
 ```
 gpsmon 또는 cgps -s
 ```
@@ -77,8 +87,9 @@ https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.ka
 cgps
 
 
-유의 사항 : 좌표를 찾기까지 10분내외의 시간이 걸릴 수 있습니다.
+- 유의 사항 : 좌표를 찾기까지 10분내외의 시간이 걸릴 수 있습니다.
 
+---
 5. 기타 기능
 
 정지하기
@@ -101,7 +112,7 @@ sudo systemctl start gpsd.socket
 sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
 ```
 ---
-gps값 파싱
+- gps값 추출
 
 $GPGGA( Global Positioning System Fix Data) -> 시간, 위도,경도, 고도 등의 데이터가 들어온다.
 ```
@@ -189,7 +200,7 @@ Ex) $GPGGA,103022.132,3735.0079,N,12701.6446,E,1,04,5.4,50.1,M,20.6,M,0.0,0000*4
 https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbLmyKm%2FbtqAnwJ7xgO%2FjHvU7Iqy7ha4Z5kWH2bWC0%2Fimg.png)
 
 ---
-문자열 자르기
+- 문자열 자르기
 ```
 #define _CRT_SECURE_NO_WARNINGS    // strtok 보안 경고로 인한 컴파일 에러 방지
 #include <stdio.h>
@@ -235,7 +246,7 @@ while 반복문 안에서는 sArr[i] = ptr;과 같이 자른 문자열의 메모
 포인터 ptr은 반복문을 반복하면서 문자열을 자를 때마다 안에 저장된 메모리 주소가 계속 바뀌므로 나중에 다시 사용할 수 없습니다. 하지만 예제처럼 ptr에 저장된 메모리 주소가 바뀌기 전에 다른 곳에 보관해두면 자른 문자열을 나중에도 계속 사용할 수 있습니다.
 
 ---
-데이터 전송 
+- 데이터 전송 
 
 전처리과정을 통해 구분을 위한 ','첨가 및 계산, 문자열과 float 변환을 통해 나온 결과를 시리얼 통신을 통해 전송한다.
 
@@ -254,7 +265,7 @@ if((fd = serialOpen("/dev/ttyAMA0",115200))<0)  //데이터 전송에 필요한 
 ```
 
 ---
-파일 저장
+- 파일 저장
 
 파이의 웹 서버에서 사용 할 위도 경도를 추가하기 위한 데이터파일의 저장에 이용된다.
 ```
@@ -284,7 +295,7 @@ a = 추가 쓰기 모드 / 파일이 없을 경우 새로 만들고, 파일이 �
 ```
 
 ---
-c언어 pthread 
+- c언어 리눅스 pthread 
 
 동시에 2가지의 작업을 처리하기 위해 스레드를 사용한다.
 ```
@@ -340,7 +351,7 @@ GCC컴파일 -> 주의사항 맨뒤 옵션에 -lpthread 를 넣어준다.
 ---
 
 
-파일 목록 가져오기
+- 파일 목록 가져오기
 ```
 #include <stdio.h>
 #include <stdlib.h>
@@ -369,7 +380,7 @@ int main()
 ```
 
 ---
-System 명령어 사용
+- System 명령어 사용
 
 다른 프로그램을 실행하고 종료할 때까지 기다립니다.
 
@@ -379,7 +390,7 @@ System 명령어 사용
 
 인수 : char string	실행할 프로그램 파일 명
 
-<h4>wget 및 폴더, 파일 제어에 사용된다.</h4>
+wget 및 폴더, 파일 제어에 사용된다.
 
 ```
 #include <stdio.h>
@@ -398,7 +409,7 @@ https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.ka
 
 
 ---
-ftp 서버 파일 다운로드
+- ftp 서버 파일 다운로드
 
 wget 사용
 ```
