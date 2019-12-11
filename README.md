@@ -1,12 +1,16 @@
 # RaspberryPi_wutchout
-
+라즈베리파이를 이용해 GPS값을 수신하고 이를 시리얼 통신을 통해 전송합니다. 또한 위도, 경도를 저장하여 지도에 사용합니다.
 - 순서도
 
 
 
-![순서도](
-https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbjFjm9%2FbtqAlQXpkaI%2FbmhfXHOC9Ukv19SISQSQT0%2Fimg.png
+![순서도](https://postfiles.pstatic.net/MjAxOTEyMTFfMTk2/MDAxNTc2MDUzNzU1MDI4.ThCHn_c_tvWKSYtaZVtzup40k5IwvMK9D23plbChPLkg.rEsW5t5SeQAGdo74KqHcMviXiklRFS4C97NEphouGJAg.PNG.ayj8655/Untitled_Diagram.png?type=w773
 )
+
+[NT114990732](https://www.devicemart.co.kr/goods/view?no=1342149)
+
+[PL-A900](https://www.devicemart.co.kr/goods/view?no=1290002)
+
 
 
 - GPS 모듈 사용하기
@@ -30,30 +34,28 @@ sudo raspi-config
 
 Interfacing options -> Serial -> No -> Yes 이후 재부팅
 
-![순서도](https://i0.wp.com/ozzmaker.com/wp-content/uploads/2016/12/serial-configNew2.png?resize=300%2C172
+![Interfacingoptions](https://i0.wp.com/ozzmaker.com/wp-content/uploads/2016/12/serial-configNew2.png?resize=300%2C172
 )
-![순서도](https://i2.wp.com/ozzmaker.com/wp-content/uploads/2016/12/serial-configNew3.png?resize=300%2C172
-)![순서도](https://i1.wp.com/ozzmaker.com/wp-content/uploads/2016/12/serial-configNew4.png?resize=300%2C172
-)![순서도](https://i1.wp.com/ozzmaker.com/wp-content/uploads/2016/12/serial-configNew5.png?resize=300%2C172
+![Serial](https://i2.wp.com/ozzmaker.com/wp-content/uploads/2016/12/serial-configNew3.png?resize=300%2C172
+)![No](https://i1.wp.com/ozzmaker.com/wp-content/uploads/2016/12/serial-configNew4.png?resize=300%2C172
+)![Yes](https://i1.wp.com/ozzmaker.com/wp-content/uploads/2016/12/serial-configNew5.png?resize=300%2C172
 )
----
+
+
 3. GPS 데이터 표시 툴(gpsd) 설치
 ```
 sudo apt-get install gpsd-clients gpsd -y
 ```
----
+
 4. 초기 설정 변경
 ```
 sudo nano /etc/default/gpsd
 ```
-Look for
+DEVICES=""  를 사용할 포트로 수정합니다
 
-DEVICES=""
+ex : DEVICES="/dev/ttyUSB0" 
 
-and change it to
-
-DEVICES="/dev/ttyUSB0" 
-
+---
 이후 직렬 인터페이스 설정을 수정합니다.
 ```
 sudo nano /boot/cmdline.txt
@@ -65,11 +67,10 @@ console=ttyAMA0,115200 kgdboc=ttyAMA0,115200
 재부팅합니다.
 이제 모든 준비가 완료되었습니다.
 모듈의 전송속도는 9600으로 설정합니다.
-
+ 
 ```
 stty -F /dev/ttyUSB0 9600
 ```
----
 
 - GPS 데이터 보기 
 ```
@@ -137,7 +138,7 @@ int main ()
     return 1 ;
   }
 
-  if (wiringPiSetup () == -1)							/* initializes wiringPi setup */
+  if (wiringPiSetup () == -1)		// wiringPi 초기 설정 확인
   {
     fprintf (stdout, "Unable to start wiringPi: %s\n", strerror (errno)) ;
     return 1 ;
@@ -159,9 +160,7 @@ int main ()
 				}
 			else if(GGA_code[0]=='G' && GGA_code[1]=='G' && GGA_code[2]=='A'){
 				IsitGGAstring = 1;
-				GGA_code[0]= 0; 
-				GGA_code[0]= 0;
-				GGA_code[0]= 0;		
+				GGA_code[0]= 0; 	
 				}
 			else{
 				GGA_code[0] = GGA_code[1];
@@ -178,21 +177,22 @@ int main ()
 }
 ```
 NMEA(National Marine Electronics Association) 프로토콜 분석
+
 GPS 모듈을 연결하면 문자열로 된 GPS 데이터가 넘어오는데 이를 NMEA 데이터라 하고,
 우리는 이 포맷을 파싱하여 필요한 데이터만 가져다 사용하면 된다.
 ```
 Ex) $GPGGA,103022.132,3735.0079,N,12701.6446,E,1,04,5.4,50.1,M,20.6,M,0.0,0000*48
        - 103022.132: 시간
        - 3735.0079 : 위도
-       - N은 북위
+       - N : 북위
        - 12701.6446 : 경도
        - E : 동경
-       - 1 : Fix의 종류 [0 : 위성이 안 잡혀 Invalid, 1 : GPS에서 제공하는 기본 위성을 가지고만 계산할 경우, 2 : DGPS를 이용하여 보정하여 계산할 경우)
+       - 1 : Fix의 종류 [0 : 위성이 안 잡힘, 1 : GPS에서 제공하는 기본 위성을 가지고만 계산할 경우, 2 : DGPS를 이용하여 보정하여 계산할 경우)
        - '04':  계산에 사용한 위성을 개수
        - '5.4': horizontal dilution of Precision
        - '50.1M' : 해수면 기준 고도
        - '20.6M' : WGS-84에서 정해놓은 타원체로서 모델링한 지구와 구체로서 모델링된 지구의 고도차이
-       - '0.0'과 '0000' : DGPS 사용시 마지막으로 update한 시간과 DGPS 기지국의 ID
+       - '0.0'과 '0000' : DGPS 사용시 마지막으로 업데이트한 시간과 DGPS 기지국의 ID
        - '48': Check Sum
 
 ```
@@ -390,7 +390,7 @@ int main()
 
 인수 : char string	실행할 프로그램 파일 명
 
-wget 및 폴더, 파일 제어에 사용된다.
+wget 및 폴더, 파일 다운로드에 사용된다
 
 ```
 #include <stdio.h>
@@ -412,6 +412,17 @@ https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.ka
 - ftp 서버 파일 다운로드
 
 wget 사용
+
+링크에서 파일 다운로드 할 때 사용함
+
+-r, recursive  
+
+웹을 빨아들이는 것을반복한다. 조심해서사용하라!
+
+  -l,  --level=NUMBER       maximum recursion depth (inf or 0 for infinite).
+
+최대한 반복한다. 정도는 0 으로하면 헤아릴수 없이 반복한다.
+
 ```
 sudo wget -r -l 0 ftp://5678:56785678@211.229.241.115/*
 ```
