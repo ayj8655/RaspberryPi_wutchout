@@ -1,16 +1,16 @@
 # RaspberryPi_wutchout
-라즈베리파이를 이용해 GPS값을 수신하고 이를 시리얼 통신을 통해 전송합니다. 또한 위도, 경도를 저장하여 지도에 사용합니다.
+라즈베리파이를 이용해 GPS값을 수신하고 이를 시리얼 통신을 통해 전송합니다. 
+
+또한 위도, 경도를 저장하여 지도에 사용합니다.
 - 순서도
-
-
-
 ![순서도](https://postfiles.pstatic.net/MjAxOTEyMTFfMTk2/MDAxNTc2MDUzNzU1MDI4.ThCHn_c_tvWKSYtaZVtzup40k5IwvMK9D23plbChPLkg.rEsW5t5SeQAGdo74KqHcMviXiklRFS4C97NEphouGJAg.PNG.ayj8655/Untitled_Diagram.png?type=w773
 )
 
-[NT114990732](https://www.devicemart.co.kr/goods/view?no=1342149)
-
-[PL-A900](https://www.devicemart.co.kr/goods/view?no=1290002)
-
+사용된 하드웨어 :
+[NT114990732](https://www.devicemart.co.kr/goods/view?no=1342149), 
+[PL-A900](https://www.devicemart.co.kr/goods/view?no=1290002), 
+[라즈베리파이 4](http://www.devicemart.co.kr/goods/view?no=12234534),
+[USB to TTL Serial Cable](http://www.devicemart.co.kr/goods/view?no=1164522)
 
 
 - GPS 모듈 사용하기
@@ -55,22 +55,9 @@ DEVICES=""  를 사용할 포트로 수정합니다
 
 ex : DEVICES="/dev/ttyUSB0" 
 
+이후 재부팅 합니다. 
+
 ---
-이후 직렬 인터페이스 설정을 수정합니다.
-```
-sudo nano /boot/cmdline.txt
-```
-아래 라인이 있을경우 삭제하고 저장합니다. 없을경우 그대로 진행 합니다
-
-console=ttyAMA0,115200 kgdboc=ttyAMA0,115200
-
-재부팅합니다.
-이제 모든 준비가 완료되었습니다.
-모듈의 전송속도는 9600으로 설정합니다.
- 
-```
-stty -F /dev/ttyUSB0 9600
-```
 
 - GPS 데이터 보기 
 ```
@@ -81,6 +68,8 @@ gpsmon 또는 cgps -s
 ![gpsmon](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FMtE0Q%2FbtqAnZk0gGG%2FKQeJEV4GKdG3DK1cNuggs1%2Fimg.png)
 
 gpsmon
+
+---
 
 ![cgps](
 https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.kakaocdn.net%2Fdn%2FbYUfjy%2FbtqAkTUhj6m%2Fz1z94kPw5AwAV70PZ9yo61%2Fimg.png)
@@ -115,7 +104,7 @@ sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
 ---
 - gps값 추출
 
-$GPGGA( Global Positioning System Fix Data) -> 시간, 위도,경도, 고도 등의 데이터가 들어온다.
+  $GPGGA( Global Positioning System Fix Data) -> 시간, 위도,경도, 고도 등의 데이터가 들어온다.
 ```
 #include <stdio.h>
 #include <string.h>
@@ -187,7 +176,8 @@ Ex) $GPGGA,103022.132,3735.0079,N,12701.6446,E,1,04,5.4,50.1,M,20.6,M,0.0,0000*4
        - N : 북위
        - 12701.6446 : 경도
        - E : 동경
-       - 1 : Fix의 종류 [0 : 위성이 안 잡힘, 1 : GPS에서 제공하는 기본 위성을 가지고만 계산할 경우, 2 : DGPS를 이용하여 보정하여 계산할 경우)
+       - 1 : Fix의 종류 (0 : 위성이 안 잡힘, 1 : GPS에서 제공하는 기본 위성을 가지고만 계산할 경우,
+        2 : DGPS를 이용하여 보정하여 계산할 경우)
        - '04':  계산에 사용한 위성을 개수
        - '5.4': horizontal dilution of Precision
        - '50.1M' : 해수면 기준 고도
@@ -243,12 +233,12 @@ System
 
 while 반복문 안에서는 sArr[i] = ptr;과 같이 자른 문자열의 메모리 주소를 배열에 저장하고, 배열의 인덱스를 증가시킵니다.
 
-포인터 ptr은 반복문을 반복하면서 문자열을 자를 때마다 안에 저장된 메모리 주소가 계속 바뀌므로 나중에 다시 사용할 수 없습니다. 하지만 예제처럼 ptr에 저장된 메모리 주소가 바뀌기 전에 다른 곳에 보관해두면 자른 문자열을 나중에도 계속 사용할 수 있습니다.
+ptr에 저장된 메모리 주소가 바뀌기 전에 다른 곳에 보관해두면 자른 문자열을 나중에도 계속 사용할 수 있습니다.
 
 ---
 - 데이터 전송 
 
-전처리과정을 통해 구분을 위한 ','첨가 및 계산, 문자열과 float 변환을 통해 나온 결과를 시리얼 통신을 통해 전송한다.
+전처리과정을 통해 구분을 위한 ',' 첨가 및 계산, 문자열과 float 변환을 통해 나온 결과를 시리얼 통신을 통해 전송한다.
 
 ```
 if((fd = serialOpen("/dev/ttyAMA0",115200))<0)  //데이터 전송에 필요한 포트 사용 가능한지 확인
@@ -257,10 +247,10 @@ if((fd = serialOpen("/dev/ttyAMA0",115200))<0)  //데이터 전송에 필요한 
    return 0;
  }
 
-	for (i=0; i<21; i++){		//gps 변수 배열을 한 바이트씩 전송
-				  serialPutchar(fd,data[i]);    //
-				  fflush(stdout);
-				}
+	for (i=0; i<21; i++){		      //gps 변수 배열을 한 바이트씩 전송
+	  serialPutchar(fd,data[i]);  
+	  fflush(stdout);
+	}
 
 ```
 
@@ -361,12 +351,12 @@ GCC컴파일 -> 주의사항 맨뒤 옵션에 -lpthread 를 넣어준다.
   
 int main()
 {
-    DIR *dir;
-    struct dirent *ent;
-    dir = opendir ("./");
+    DIR *dir;   //경로 설정 포인터
+    struct dirent *ent;     //데이터를 저장할 구조체 정의
+    dir = opendir ("./");   //출력할 경로 지정
     if (dir != NULL) {
   
-    /* print all the files and directories within directory */
+    // 폴더 내 모든 파일과 폴더 목록 표현
     while ((ent = readdir (dir)) != NULL) {
         printf ("%s\n", ent->d_name);
     }
@@ -387,10 +377,6 @@ int main()
 헤더 : stdlib.h
 
 형태 : int system (const char * string);
-
-인수 : char string	실행할 프로그램 파일 명
-
-wget 및 폴더, 파일 다운로드에 사용된다
 
 ```
 #include <stdio.h>
@@ -413,15 +399,15 @@ https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.ka
 
 wget 사용
 
-링크에서 파일 다운로드 할 때 사용함
+서버에서 파일 다운로드 할 때 사용함
 
 -r, recursive  
 
-웹을 빨아들이는 것을반복한다. 조심해서사용하라!
+재귀 (반복) 
 
   -l,  --level=NUMBER       maximum recursion depth (inf or 0 for infinite).
 
-최대한 반복한다. 정도는 0 으로하면 헤아릴수 없이 반복한다.
+최대한 반복한다. 정도는 0 으로하면 최대한 반복한다.
 
 ```
 sudo wget -r -l 0 ftp://5678:56785678@211.229.241.115/*
