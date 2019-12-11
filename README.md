@@ -3,6 +3,7 @@
 
 또한 위도, 경도를 저장하여 지도에 사용합니다.
 - 순서도
+
 ![순서도](https://postfiles.pstatic.net/MjAxOTEyMTFfMTk2/MDAxNTc2MDUzNzU1MDI4.ThCHn_c_tvWKSYtaZVtzup40k5IwvMK9D23plbChPLkg.rEsW5t5SeQAGdo74KqHcMviXiklRFS4C97NEphouGJAg.PNG.ayj8655/Untitled_Diagram.png?type=w773
 )
 
