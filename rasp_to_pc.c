@@ -3,13 +3,13 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <sys/types.h>
-#include <dirent.h>
+#include <dirent.h>		//opendir(),readdir()
 #include <error.h>
 #include <wiringPi.h>
 #include <wiringSerial.h>
 #include <unistd.h>
 #include <signal.h>
-#include <pthread.h>
+#include <pthread.h>		//스레드
 
 
 
@@ -140,12 +140,11 @@ int main ()
 {
 	float lat,log;
 	int fd, i=0, j=0;
-	char data[21];
 	char *sArr2[20] = { NULL, };
 	char *sArr3[20] = { NULL, };
 	FILE *fp;
-	char aaa[20]={'.'};
-	char bbb[20]={".."};
+	char aaa[20]={'.'};	//문자열 비교를 위해
+	char bbb[20]={".."};	
 	int k=0;
 	char *ptr = NULL;
 	float lat_arr[20];
@@ -163,18 +162,15 @@ int main ()
 		 
 		system("sudo rm -r 211.229.241.115/");		//폴더 삭제
 		system("sudo wget -r -l 0 ftp://5678:56785678@211.229.241.115/*");	//wget으로 ftp 서버의 폴더 전체 다운로드
-		
-		
-		
 		i=0, count = 0;
-		DIR *dir;
-		struct dirent *ent;
-		dir = opendir ("/home/pi/211.229.241.115");	//폴더의 경로 변수에 저장
-	 	
-
+		DIR *dir;					//opendir()에서 열기한 디렉토리 정보
+		struct dirent *ent;				//반환할 정보 저장
+		dir = opendir ("/home/pi/211.229.241.115");	//그 안에 있는 모든 파일과 디렉토리 정보를 구한다.
+	 							//폴더의 경로 변수에 저장
+		
 		if (dir != NULL) {		// 폴더 내 모든 파일과 폴더 목록 표현
 		
-		while ((ent = readdir (dir)) != NULL) {
+		while ((ent = readdir (dir)) != NULL) {	//readdir 함수는 더 이상 읽을 디렉토리 항(파일)이 없거나 오류가 났을경우 NULL반환
 			if (!strcmp(ent -> d_name, aaa)){	//검색시 . 과 ..이 존재해서 지우기 위해 추가
 			 continue;				//.은 자신을 ..은 부모 디렉토리를 뜻함
 			} else if (!strcmp(ent -> d_name, bbb)) {//문자열 비교를 위해 strcmp 사용
