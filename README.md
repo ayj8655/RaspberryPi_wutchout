@@ -116,19 +116,19 @@ sudo gpsd /dev/ttyUSB0 -F /var/run/gpsd.sock
 
 int main ()
 {
-  int serial_port; 
-  char dat,buff[100],GGA_code[3];
+  int serial_port; 	//시리얼 포트 확인을 위한 변수
+  char dat,buff[100],GGA_code[3];	//GGA데이터 수신을 위한 변수
   unsigned char IsitGGAstring=0;
   unsigned char GGA_index=0;
   unsigned char is_GGA_received_completely = 0;
   
-  if ((serial_port = serialOpen ("/dev/ttyUSB0", 9600)) < 0)		//사용할 시리얼 포트 지정
+  if ((serial_port = serialOpen ("/dev/ttyUSB0", 9600)) < 0)		// 시리얼 포트 확인
   {
     fprintf (stderr, "Unable to open serial device: %s\n", strerror (errno)) ;
     return 1 ;
   }
 
-  if (wiringPiSetup () == -1)		// wiringPi 초기 설정 확인
+  if (wiringPiSetup () == -1)		// wiringPi 초기 설정 확인 (gpio 통신을 위해)
   {
     fprintf (stdout, "Unable to start wiringPi: %s\n", strerror (errno)) ;
     return 1 ;
@@ -143,12 +143,12 @@ int main ()
 				IsitGGAstring = 0;
 				GGA_index = 0;
 			}
-			else if(IsitGGAstring ==1){
-				buff[GGA_index++] = dat;
-				if(dat=='\r')
-					is_GGA_received_completely = 1; //데이터 수신 완료
+			else if(IsitGGAstring ==1){		
+				buff[GGA_index++] = dat;		//버퍼에 데이터 저장
+				if(dat=='\r')				//완료시
+					is_GGA_received_completely = 1; //데이터 수신 완료 플래그
 				}
-			else if(GGA_code[0]=='G' && GGA_code[1]=='G' && GGA_code[2]=='A'){
+			else if(GGA_code[0]=='G' && GGA_code[1]=='G' && GGA_code[2]=='A'){	//GGA 데이터를 받았을 경우
 				IsitGGAstring = 1;
 				GGA_code[0]= 0; 	
 				}
@@ -248,9 +248,9 @@ if((fd = serialOpen("/dev/ttyAMA0",115200))<0)  //데이터 전송에 필요한 
    return 0;
  }
 
-	for (i=0; i<21; i++){		      //gps 변수 배열을 한 바이트씩 전송
-	  serialPutchar(fd,data[i]);  
-	  fflush(stdout);
+	for (i=0; i<21; i++){		     
+	  serialPutchar(fd,data[i]);  //gps 변수 배열을 문자 하나씩 전송(단일 바이트)
+	  fflush(stdout);		//스트림을 비운다.
 	}
 
 ```
@@ -352,13 +352,13 @@ GCC컴파일 -> 주의사항 맨뒤 옵션에 -lpthread 를 넣어준다.
   
 int main()
 {
-    DIR *dir;   //경로 설정 포인터
-    struct dirent *ent;     //데이터를 저장할 구조체 정의
-    dir = opendir ("./");   //출력할 경로 지정
+    DIR *dir;  //opendir()에서 열기한 디렉토리 정보
+    struct dirent *ent;     //반환할 정보 저장
+    dir = opendir ("./");   //그 안에 있는 모든 파일과 디렉토리 정보를 구한다.
     if (dir != NULL) {
   
     // 폴더 내 모든 파일과 폴더 목록 표현
-    while ((ent = readdir (dir)) != NULL) {
+    while ((ent = readdir (dir)) != NULL) {		//readdir 함수는 더 이상 읽을 디렉토리 항(파일)이 없거나 오류가 났을경우 NULL반환
         printf ("%s\n", ent->d_name);
     }
     closedir (dir);
