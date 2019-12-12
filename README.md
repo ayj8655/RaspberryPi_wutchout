@@ -193,7 +193,6 @@ https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fk.ka
 ---
 - 문자열 자르기
 ```
-#define _CRT_SECURE_NO_WARNINGS    // strtok 보안 경고로 인한 컴파일 에러 방지
 #include <stdio.h>
 #include <string.h>    // strtok 함수가 선언된 헤더 파일
 
