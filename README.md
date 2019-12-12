@@ -209,10 +209,8 @@ int main()
     {
         sArr[i] = ptr;             // 문자열을 자른 뒤 메모리 주소를 문자열 포인터 배열에 저장
         i++;                       // 인덱스 증가
-
         ptr = strtok(NULL, " ");   // 다음 문자열을 잘라서 포인터를 반환
     }
-
     for (int i = 0; i < 10; i++)
     {
         if (sArr[i] != NULL)           // 문자열 포인터 배열의 요소가 NULL이 아닐 때만
@@ -247,7 +245,6 @@ if((fd = serialOpen("/dev/ttyAMA0",115200))<0)  //데이터 전송에 필요한 
    fprintf(stderr,"Unable to open serial device:%s\n",strerror(errno));
    return 0;
  }
-
 	for (i=0; i<21; i++){		     
 	  serialPutchar(fd,data[i]);  //gps 변수 배열을 문자 하나씩 전송(단일 바이트)
 	  fflush(stdout);		//스트림을 비운다.
@@ -269,7 +266,6 @@ int main()
                                            // 파일 포인터를 반환
     fprintf(fp, "Hello");    // 파일에 문자열 저장
     fclose(fp);    // 파일 포인터 닫기
-
     return 0;
 }
 ```
@@ -307,23 +303,18 @@ void* My(void* Para)    //스레드로 사용할 내용 지정
 		sleep(2);
 	}
 }
-
-
-
 int main()
-
 {
 	pthread_t child_thread;
 	int thread_rst;
 	void* s;
 	thread_rst = pthread_create(&child_thread, NULL, My, NULL); //스레드 시작
-
+//				스레드 식별자, 스레드특성, 실행할 스레드 함수, 매개변수
 	while(1)
 	{
 		printf("I'm in main\n");
 		sleep(1);
 	}
-
 	pthread_join(child_thread, &s); //스레드 종료를 기다린다.
 	printf("%s\n",s);
 	return 0;
