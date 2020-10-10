@@ -1,4 +1,8 @@
 # RaspberryPi_wutchout
+
+https://github.com/suc1117/5678
+
+
 라즈베리파이를 이용해 GPS값을 수신하고 이를 시리얼 통신을 통해 전송합니다. 
 
 또한 위도, 경도를 저장하여 지도에 사용합니다.
